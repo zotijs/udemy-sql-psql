@@ -1,0 +1,8 @@
+-- three characters long
+SELECT('fsdkfsdkfskf'::CHAR(3));
+
+-- five characters long with varchar
+SELECT('fsdkfsdkfskf'::VARCHAR(5));
+
+-- with text
+SELECT('fsdkfsdkfskf'::TEXT);

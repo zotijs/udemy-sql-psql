@@ -1,0 +1,17 @@
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(40) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    est_delivery TIMESTAMP NOT NULL,
+    CHECK (created_at < est_delivery)
+);
+
+-- this should work
+INSERT INTO orders (name, created_at, est_delivery)
+VALUES
+    ('Order 1', '2024-12-01', '2024-12-02');
+
+-- this should fail
+INSERT INTO orders (name, created_at, est_delivery)
+VALUES
+    ('Order 2', '2024-12-02', '2024-12-01');    

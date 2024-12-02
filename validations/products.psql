@@ -1,0 +1,91 @@
+-- create initial products table
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    department VARCHAR(40),
+    price DECIMAL(10, 2) NOT NULL,
+    weight INTEGER
+);
+
+-- test select products table_am_handler_in
+INSERT INTO products (
+    name, department, price, weight
+)
+VALUES
+    ('Shirt', 'Clothes', 20.0, 1);
+
+SELECT * FROM products;  
+
+INSERT INTO products (
+    name, department, price, weight
+)
+VALUES
+    ('Pants', 'Clothes', 20.0, null);
+
+-- fix null weight value products
+UPDATE products
+SET weight = 1
+WHERE weight IS NULL;    
+
+-- alter table to add some constraints
+ALTER TABLE products
+ALTER COLUMN weight
+SET NOT NULL;
+
+-- alter table to add a default price
+ALTER TABLE products
+ALTER COLUMN price
+SET DEFAULT 0.99;
+
+-- test insert with default VALUE
+INSERT INTO products (
+    name, department, weight
+)
+VALUES
+    ('Shoes', 'Clothes', 1);
+
+SELECT * FROM products;   
+
+-- alter table to have unique name
+ALTER TABLE products
+ADD UNIQUE(name);
+
+-- this should error
+INSERT INTO products (
+    name, department, weight
+)
+VALUES
+    ('Shirt', 'Clothes', 1);
+
+-- drop the unique constraint 
+ALTER TABLE products
+DROP CONSTRAINT products_name_key;
+
+-- create a new constraint for name and department
+ALTER TABLE products
+ADD UNIQUE(name, department);
+
+-- this should work
+INSERT INTO products (
+    name, department, weight
+)
+VALUES
+    ('Shirt', 'Housewares', 1);
+
+-- this should error
+INSERT INTO products (
+    name, department, weight
+)
+VALUES
+    ('Shirt', 'Clothes', 10);
+
+-- alter table to apply check validation for price
+ALTER TABLE products
+ADD CHECK(price > 0);   
+
+-- this should error
+INSERT INTO products (
+    name, department, price, weight
+)
+VALUES
+    ('Hat', 'Clothes', -1, 1);

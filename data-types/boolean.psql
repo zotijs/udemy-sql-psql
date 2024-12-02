@@ -1,0 +1,12 @@
+-- to true BOOLEAN
+SELECT('true'::BOOLEAN);
+SELECT('y'::BOOLEAN);
+SELECT(1::BOOLEAN);
+
+-- to false BOOLEAN
+SELECT('false'::BOOLEAN);
+SELECT('n'::BOOLEAN);
+SELECT(0::BOOLEAN);
+
+-- to null BOOLEAN
+SELECT(NULL::BOOLEAN);
