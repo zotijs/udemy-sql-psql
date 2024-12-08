@@ -13,6 +13,7 @@ Repository fof Stephen Grider's postgres [course](https://www.udemy.com/course/s
 
 - connect to postgres server: `docker exec -it <container_id> psql -U example`
 - change database (inside the container): `\c <database_name>`
+- tables: `\dt`
 - table details: `\d <table_name>`
 
 ## Schema Designers:
