@@ -1,0 +1,42 @@
+-- create index for users.username
+-- since name was not provided the name of the index was automatically generated
+-- with the value of users_username_idx
+-- convention is table_column_idx
+CREATE INDEX ON users(username);
+
+-- delete the index
+DROP INDEX users_username_idx;
+
+-- benchmark queries 
+
+-- with index 0.044 ms
+EXPLAIN ANALYZE SELECT * 
+FROM users 
+WHERE username = 'Emil30';
+
+-- hd space of users table
+SELECT pg_size_pretty(pg_total_relation_size('users'));
+
+-- hd spaces of users_username_idx
+SELECT pg_size_pretty(pg_total_relation_size('users_username_idx'));
+
+-- info about INDEXES
+-- slows down insert/update/delete operations
+-- do not create if not going to be used
+
+-- types of INDEXES
+-- B-tree (default) what we have created above
+-- Hash
+-- GiST
+-- SP-GiST
+-- GIN
+-- BRIN
+
+-- automatically created INDEXES
+-- primary key columns
+-- unique constraint columns
+
+-- list automatically created INDEXES
+SELECT relname, relkind
+FROM pg_class
+WHERE relkind = 'i';
