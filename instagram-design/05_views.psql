@@ -1,0 +1,86 @@
+-- VIEWS --
+-- without views
+SELECT username, COUNT(*)
+FROM users
+JOIN (
+    SELECT user_id FROM photo_tags
+    UNION ALL
+    SELECT user_id FROM caption_tags
+) AS tags ON tags.user_id = users.id
+GROUP BY username
+ORDER BY COUNT(*) DESC;
+
+-- with views
+CREATE VIEW tags AS (
+    SELECT id, created_at, user_id, post_id, 'photo_tag' AS type FROM photo_tags
+    UNION ALL
+    SELECT id, created_at, user_id, post_id, 'caption_tag' AS type FROM caption_tags
+);
+
+-- select from tags view
+SELECT username, COUNT(*)
+FROM users
+JOIN tags ON tags.user_id = users.id
+GROUP BY username
+ORDER BY COUNT(*) DESC;
+
+-- recent posts VIEW
+CREATE VIEW recent_posts AS (
+    SELECT * FROM posts
+    ORDER BY created_at DESC
+    LIMIT 10
+);
+
+SELECT * FROM recent_posts;
+
+SELECT username FROM recent_posts
+JOIN users ON users.id = recent_posts.user_id;
+
+-- change recent_posts view
+CREATE OR REPLACE VIEW recent_posts AS (
+    SELECT * FROM posts
+    ORDER BY created_at DESC
+    LIMIT 15
+);
+
+-- delete recent_posts view 
+DROP VIEW recent_posts;
+
+-- -- -- -- -- -- -- --
+-- MATERIALIZED VIEWS --
+-- -- -- -- -- -- -- --
+-- used for expensive queries
+-- results are saved by postgres
+-- and we can refer back to the results without executing the expensive query again
+-- -- -- -- -- -- -- --
+
+-- example: count and group likes by type (post or comment) for each week
+
+-- without materialized views (slow query)
+SELECT 
+    date_trunc('week', COALESCE(posts.created_at, comments.created_at)) AS week,
+    COUNT(posts.id) AS num_likes_for_posts,
+    COUNT(comments.id) AS num_likes_for_comments
+FROM likes
+LEFT JOIN posts ON likes.post_id = posts.id
+LEFT JOIN comments ON likes.comment_id = comments.id
+GROUP BY week
+ORDER BY week;
+
+-- with materialized views
+CREATE MATERIALIZED VIEW weekly_likes AS (
+    SELECT 
+        date_trunc('week', COALESCE(posts.created_at, comments.created_at)) AS week,
+        COUNT(posts.id) AS num_likes_for_posts,
+        COUNT(comments.id) AS num_likes_for_comments
+    FROM likes
+    LEFT JOIN posts ON likes.post_id = posts.id
+    LEFT JOIN comments ON likes.comment_id = comments.id
+    GROUP BY week
+    ORDER BY week
+) WITH DATA;
+
+-- select from materialized view
+SELECT * FROM weekly_likes;
+
+-- downside: if we modify the data we need to re-run the materialized view query
