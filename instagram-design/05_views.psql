@@ -83,4 +83,17 @@ CREATE MATERIALIZED VIEW weekly_likes AS (
 -- select from materialized view
 SELECT * FROM weekly_likes;
 
--- downside: if we modify the data we need to re-run the materialized view query
+-- downside: if we modify the data we need to refresh the materialized view query
+
+-- delete some posts
+DELETE FROM posts
+WHERE created_at < '2010-02-01';
+
+-- by running the below query we see outdated data
+SELECT * FROM weekly_likes;
+
+-- we need to refresh the materialized view
+REFRESH MATERIALIZED VIEW weekly_likes;
+
+-- now we have the correct results
+SELECT * FROM weekly_likes;
