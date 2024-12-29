@@ -1,0 +1,63 @@
+-- TRANSACTIONS --
+-- -- -- -- -- -- --
+-- A new table will be created just for the transactions example
+-- Transaction examples cannot be simulated in PostgreSQL VSCode plugin
+-- -- -- -- -- -- --
+
+-- create accounts table
+CREATE TABLE accounts (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(20) NOT NULL,
+    balance INTEGER NOT NULL
+);
+
+-- example data
+INSERT INTO accounts (name, balance)
+VALUES ('Gia', 100),
+       ('Alyson', 100);
+
+SELECT * FROM accounts;
+
+-- -- -- -- -- -- --
+
+-- open a transaction
+BEGIN;
+
+-- update balance
+UPDATE accounts
+SET balance = balance - 50
+WHERE name = 'Alyson';
+
+-- check the balance
+-- in a second connection we will see balance 100
+SELECT * FROM accounts;
+
+-- in a second connection we will see balance 100
+UPDATE accounts
+SET balance = balance + 50
+WHERE name = 'Gia';
+
+-- commit transaction
+COMMIT;
+
+-- ---------------
+-- restore accounts
+UPDATE accounts
+SET balance = 100;
+
+SELECT * FROM accounts;
+-- simulate a crash
+
+BEGIN;
+
+UPDATE accounts
+SET balance = balance - 50
+WHERE name = 'Alyson';
+
+SELECT * FROM accounts;
+
+-- terminate connection
+-- create a new connection, see that the balance is not changed
+
+-- close the transaction
+ROLLBACK;
