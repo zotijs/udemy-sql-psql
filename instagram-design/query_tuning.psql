@@ -1,0 +1,41 @@
+-- EXPLAIN => build a query plan and show info about it
+-- EXPLAIN ANALYZE => build a query plan, execute it and show info about it
+
+EXPLAIN SELECT username, contents
+FROM users
+JOIN comments ON users.id = comments.user_id
+WHERE username = 'Alyson14';
+
+EXPLAIN ANALYZE SELECT username, contents
+FROM users
+JOIN comments ON users.id = comments.user_id
+WHERE username = 'Alyson14';
+
+-- pg statistics
+SELECT *
+FROM pg_stats
+WHERE tablename = 'users';
+
+-- -- -- -- --
+
+-- expensive query
+SELECT *
+FROM likes
+WHERE created_at < '2013-01-01';
+
+-- explain the query 
+EXPLAIN SELECT *
+FROM likes
+WHERE created_at < '2013-01-01';
+
+-- optimize the query by creating an index
+CREATE INDEX ON likes(created_at);
+
+-- for this pg is doing a sequential scan and ignores the index 
+EXPLAIN SELECT *
+FROM likes
+WHERE created_at > '2013-01-01';
+
+-- so the index is not needed because it will not be used
+DROP INDEX likes_created_at_idx;
+
