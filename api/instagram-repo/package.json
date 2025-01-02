@@ -1,0 +1,26 @@
+{
+  "name": "instagram-repo",
+  "version": "1.0.0",
+  "description": "Repository Pattern application",
+  "main": "index.js",
+  "scripts": {
+    "migrate": "node-pg-migrate",
+    "dev": "nodemon --env-file .env index.js",
+    "start": "node --env-file .env index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dedent": "^1.5.3",
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "pg-format": "^1.0.4"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "node-pg-migrate": "^7.8.0",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.0.0"
+  }
+}

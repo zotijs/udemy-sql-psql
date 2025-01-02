@@ -9,3 +9,10 @@
 -- another transaction on the same row should wait for the previous transaction to finish (commit or rollback)
 
 -- best to run all the migration logic in SQL and not on the application level
+
+INSERT INTO users (bio, username)
+VALUES
+    ('This is a bio', 'Alyson14'),
+    ('This is another bio', 'Gia67');
+
+SELECT * FROM users;
