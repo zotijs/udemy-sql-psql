@@ -1,0 +1,11 @@
+-- check instagram-project
+
+-- notes
+-- always split migrations into small steps
+-- first the schema changes, then the data migration
+
+-- data migration downsides using long running transactions:
+-- during transactions the rows are locked
+-- another transaction on the same row should wait for the previous transaction to finish (commit or rollback)
+
+-- best to run all the migration logic in SQL and not on the application level
